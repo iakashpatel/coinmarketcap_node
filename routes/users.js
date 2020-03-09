@@ -23,6 +23,35 @@ router.post("/login", passport.authenticate("local"), function(req, res) {
   });
 });
 
+router.post("/register", async function(req, res) {
+  try {
+    const {
+      email = "",
+      password = "",
+      first_name = "",
+      last_name = ""
+    } = req.body;
+    if (!email || !password) {
+      throw Error("invalid");
+    } else {
+      const user = new Users({
+        email,
+        password,
+        first_name,
+        last_name
+      });
+      return user
+        .save()
+        .then(() => {
+          return res.send({ user });
+        })
+        .catch(error => res.status(400).send({ error }));
+    }
+  } catch (error) {
+    return res.status(400).send({ error: "failed/invalid" });
+  }
+});
+
 router.get(
   "/auth/facebook",
   passport.authenticate("facebook", { scope: "email" })
