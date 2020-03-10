@@ -4,9 +4,12 @@ require("dotenv").config();
 var mongoose = require("mongoose");
 
 //Set up default mongoose connection
-var mongoDB = process.env.MONGO_URI || 'mongodb://localhost:27017/primesite';
-mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
-
+var mongoDB = process.env.MONGO_URI || "mongodb://localhost:27017/primesite";
+mongoose.connect(mongoDB, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+mongoose.set('useCreateIndex', true);
 //Get the default connection
 var db = mongoose.connection;
 
