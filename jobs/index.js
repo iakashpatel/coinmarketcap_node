@@ -53,14 +53,14 @@ async function fetchDetils() {
       let ticker = await Tickers.findOne({ ticker: symbol });
 
       if (ticker) {
-        const currentDay =
-          new Date(last_updated).getTime() -
-            new Date(updated_timestamp).getTime() >=
-          86400000
-            ? false
-            : true;
+        const [curDay = ""] = last_updated.split("T");
+        const [prevDay = ""] = ticker.updated_timestamp.split("T");
+        const nextDay =
+          new Date(curDay).setHours(0, 0, 0, 0) -
+            new Date(prevDay).setHours(0, 0, 0, 0) >=
+          86400000;
 
-        if (currentDay) {
+        if (!nextDay) {
           ticker.name = name;
           ticker.marketcap_rank = cmc_rank;
           ticker.price_usd = price;
