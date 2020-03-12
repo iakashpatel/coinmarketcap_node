@@ -50,11 +50,12 @@ async function fetchDetils() {
       const { quote = {}, name, cmc_rank, symbol } = item;
       const { USD = {} } = quote;
       const { price, volume_24h, market_cap, last_updated } = USD;
-      let ticker = await Tickers.findOne({ ticker: symbol });
+      let ticker = await Tickers.findOne({ ticker: symbol }).sort({updated_timestamp: -1});
+      const tickerCount = await Tickers.countDocuments({ ticker: symbol });
 
       if (ticker) {
         const [curDay = ""] = last_updated.split("T");
-        const [prevDay = ""] = ticker.updated_timestamp.split("T");
+        const [prevDay = ""] = ticker.timestamp.split("T");
         const nextDay =
           new Date(curDay).setHours(0, 0, 0, 0) -
             new Date(prevDay).setHours(0, 0, 0, 0) >=
@@ -70,6 +71,10 @@ async function fetchDetils() {
           ticker.updated_timestamp = new Date(last_updated).getTime();
           ticker.save();
         } else {
+          if(tickerCount > 90){
+            const firstTicker = await Tickers.findOne({ ticker: symbol }).sort({updated_timestamp: 1})
+            await firstTicker.remove();
+          }
           createNewTicker(
             name,
             symbol,

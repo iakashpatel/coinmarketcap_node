@@ -6,6 +6,7 @@ import Jumbotron from "react-bootstrap/Jumbotron";
 import { useHistory } from "react-router-dom";
 import socketIOClient from "socket.io-client";
 const axios = require("axios");
+const { nthCompare } = require("../utils/compareUtil");
 
 function RenderSignal(props) {
   const { varient, children } = props;
@@ -36,30 +37,36 @@ function Dashboard() {
     amount,
     decimalCount = 2,
     decimal = ".",
-    thousands = ","
+    thousands = ",",
+    sign = "$"
   ) {
     try {
-      decimalCount = Math.abs(decimalCount);
-      decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
+      if (!isNaN(amount)) {
+        decimalCount = Math.abs(decimalCount);
+        decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
 
-      const negativeSign = amount < 0 ? "-" : "";
+        const negativeSign = amount < 0 ? "-" : "";
 
-      let i = parseInt(
-        (amount = Math.abs(Number(amount) || 0).toFixed(decimalCount))
-      ).toString();
-      let j = i.length > 3 ? i.length % 3 : 0;
+        let i = parseInt(
+          (amount = Math.abs(Number(amount) || 0).toFixed(decimalCount))
+        ).toString();
+        let j = i.length > 3 ? i.length % 3 : 0;
 
-      return (
-        negativeSign +
-        (j ? i.substr(0, j) + thousands : "") +
-        i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) +
-        (decimalCount
-          ? decimal +
-            Math.abs(amount - i)
-              .toFixed(decimalCount)
-              .slice(2)
-          : "")
-      );
+        return (
+          negativeSign +
+          sign +
+          (j ? i.substr(0, j) + thousands : "") +
+          i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) +
+          (decimalCount
+            ? decimal +
+              Math.abs(amount - i)
+                .toFixed(decimalCount)
+                .slice(2)
+            : "")
+        );
+      } else {
+        return "--";
+      }
     } catch (e) {
       console.log(e);
     }
@@ -69,7 +76,8 @@ function Dashboard() {
     try {
       const coins = await axios.get("/coins");
       const { data } = coins;
-      setTickers(data);
+      const { coins: coinsData } = data;
+      setTickers(coinsData);
     } catch (error) {
       history.replace("/login");
       console.log("error-checkuser", error);
@@ -133,40 +141,125 @@ function Dashboard() {
             </thead>
             <tbody>
               {tickers.map((item, index) => {
+                const { data } = item;
+                const latestData = Object.assign([], data).pop();
                 const {
                   marketcap_rank,
                   marketcap_usd,
                   name,
                   price_usd,
                   volume
-                } = item;
+                } = latestData;
+                
+                
+                  const mc_rank_1d = nthCompare(data,2,"marketcap_rank", '--');
+                  const mc_rank_3d = nthCompare(data,3,"marketcap_rank", '--');
+                  const mc_rank_5d = nthCompare(data,5,"marketcap_rank", '--');
+                  const mc_rank_7d = nthCompare(data,7,"marketcap_rank", '--');
+                  const mc_rank_14d = nthCompare(data,14,"marketcap_rank", '--');
+                  const mc_rank_1mo = nthCompare(data,30,"marketcap_rank", '--');
+                  const mc_rank_2mo = nthCompare(data,60,"marketcap_rank", '--');
+                  const mc_rank_3mo = nthCompare(data,90,"marketcap_rank", '--');
+                  const mc_usd_1d = nthCompare(data,2,"marketcap_usd", '--');
+                  const mc_usd_3d = nthCompare(data,3,"marketcap_usd", '--');
+                  const mc_usd_5d = nthCompare(data,5,"marketcap_usd", '--');
+                  const mc_usd_7d = nthCompare(data,7,"marketcap_usd", '--');
+                  const mc_usd_14d = nthCompare(data,14,"marketcap_usd", '--');
+                  const mc_usd_1mo = nthCompare(data,30,"marketcap_usd", '--');
+                  const mc_usd_2mo = nthCompare(data,60,"marketcap_usd", '--');
+                  const mc_usd_3mo= nthCompare(data,90,"marketcap_usd", '--');
+                
                 return (
                   <tr key={index}>
                     <td>{marketcap_rank}</td>
                     <td>{name}</td>
-                    <td>${formatMoney(marketcap_usd, 2, ".", ",")}</td>
-                    <td>${formatMoney(price_usd, 2, ".", ",")}</td>
-                    <td>${formatMoney(volume, 2, ".", ",")}</td>
+                    <td>{formatMoney(marketcap_usd, 2, ".", ",")}</td>
+                    <td>{formatMoney(price_usd, 2, ".", ",")}</td>
+                    <td>{formatMoney(volume, 2, ".", ",")}</td>
+
                     {/* MC Rank change  */}
                     <td>
-                      <RenderSignal>{marketcap_rank}</RenderSignal>
+                      <RenderSignal varient={mc_rank_1d.status}>
+                        {mc_rank_1d.diff}
+                      </RenderSignal>
                     </td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
+                    <td>
+                      <RenderSignal varient={mc_rank_3d.status}>
+                        {mc_rank_3d.diff}
+                      </RenderSignal>
+                    </td>
+                    <td>
+                      <RenderSignal varient={mc_rank_5d.status}>
+                        {mc_rank_5d.diff}
+                      </RenderSignal>
+                    </td>
+                    <td>
+                      <RenderSignal varient={mc_rank_7d.status}>
+                        {mc_rank_7d.diff}
+                      </RenderSignal>
+                    </td>
+                    <td>
+                      <RenderSignal varient={mc_rank_14d.status}>
+                        {mc_rank_14d.diff}
+                      </RenderSignal>
+                    </td>
+                    <td>
+                      <RenderSignal varient={mc_rank_1mo.status}>
+                        {mc_rank_1mo.diff}
+                      </RenderSignal>
+                    </td>
+                    <td>
+                      <RenderSignal varient={mc_rank_2mo.status}>
+                        {mc_rank_2mo.diff}
+                      </RenderSignal>
+                    </td>
+                    <td>
+                      <RenderSignal varient={mc_rank_3mo.status}>
+                        {mc_rank_3mo.diff}
+                      </RenderSignal>
+                    </td>
+
                     {/* MC change  */}
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
+                    <td>
+                      <RenderSignal varient={mc_usd_1d.status}>
+                        {formatMoney(mc_usd_1d.diff, 2, ".", ",")}
+                      </RenderSignal>
+                    </td>
+                    <td>
+                      <RenderSignal varient={mc_usd_3d.status}>
+                        {formatMoney(mc_usd_3d.diff, 2, ".", ",")}
+                      </RenderSignal>
+                    </td>
+                    <td>
+                      <RenderSignal varient={mc_usd_5d.status}>
+                        {formatMoney(mc_usd_5d.diff, 2, ".", ",")}
+                      </RenderSignal>
+                    </td>
+                    <td>
+                      <RenderSignal varient={mc_usd_7d.status}>
+                        {formatMoney(mc_usd_7d.diff, 2, ".", ",")}
+                      </RenderSignal>
+                    </td>
+                    <td>
+                      <RenderSignal varient={mc_usd_14d.status}>
+                        {formatMoney(mc_usd_14d.diff, 2, ".", ",")}
+                      </RenderSignal>
+                    </td>
+                    <td>
+                      <RenderSignal varient={mc_usd_1mo.status}>
+                        {formatMoney(mc_usd_1mo.diff, 2, ".", ",")}
+                      </RenderSignal>
+                    </td>
+                    <td>
+                      <RenderSignal varient={mc_usd_2mo.status}>
+                        {formatMoney(mc_usd_2mo.diff, 2, ".", ",")}
+                      </RenderSignal>
+                    </td>
+                    <td>
+                      <RenderSignal varient={mc_usd_3mo.status}>
+                        {formatMoney(mc_usd_3mo.diff, 2, ".", ",")}
+                      </RenderSignal>
+                    </td>
                   </tr>
                 );
               })}
