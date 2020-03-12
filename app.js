@@ -13,7 +13,7 @@ var cookieSession = require("cookie-session");
 var usersRouter = require("./routes/users");
 var coinsRouter = require("./routes/coins");
 var passport = require("./passport/index");
-const _ = require('lodash');
+const _ = require("lodash");
 
 var app = express();
 const Tickers = require("./models/tickers");
@@ -83,12 +83,18 @@ const io = socketIo(server); // < Interesting!
 const getApiAndEmit = async socket => {
   try {
     const coins = await Tickers.find().sort({
-      marketcap_rank: 1
+      updated_timestamp: -1
     });
-    const history_coins = _.chain(coins)
-    .groupBy("ticker")
-    .map((value, key) => ({ ticker: key, data: value }))
-    .value();
+    const history_coins = _.chain(
+      _.sortBy(coins, [
+        function(o) {
+          return o.marketcap_rank;
+        }
+      ])
+    )
+      .groupBy("ticker")
+      .map((value, key) => ({ ticker: key, data: value }))
+      .value();
 
     socket.emit("FromAPI", history_coins); // Emitting a new message. It will be consumed by the client
   } catch (error) {

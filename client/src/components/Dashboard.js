@@ -6,6 +6,7 @@ import Jumbotron from "react-bootstrap/Jumbotron";
 import { useHistory } from "react-router-dom";
 import socketIOClient from "socket.io-client";
 const axios = require("axios");
+const _ = require("lodash");
 const { nthCompare } = require("../utils/compareUtil");
 
 function RenderSignal(props) {
@@ -142,7 +143,12 @@ function Dashboard() {
             <tbody>
               {tickers.map((item, index) => {
                 const { data } = item;
-                const latestData = Object.assign([], data).pop();
+                const sortedData = _.sortBy(data, [
+                  function(o) {
+                    return o.updated_timestamp;
+                  }
+                ]);
+                const latestData = Object.assign([], sortedData).pop();
                 const {
                   marketcap_rank,
                   marketcap_usd,
@@ -151,23 +157,22 @@ function Dashboard() {
                   volume
                 } = latestData;
                 
-                
-                  const mc_rank_1d = nthCompare(data,2,"marketcap_rank", '--');
-                  const mc_rank_3d = nthCompare(data,3,"marketcap_rank", '--');
-                  const mc_rank_5d = nthCompare(data,5,"marketcap_rank", '--');
-                  const mc_rank_7d = nthCompare(data,7,"marketcap_rank", '--');
-                  const mc_rank_14d = nthCompare(data,14,"marketcap_rank", '--');
-                  const mc_rank_1mo = nthCompare(data,30,"marketcap_rank", '--');
-                  const mc_rank_2mo = nthCompare(data,60,"marketcap_rank", '--');
-                  const mc_rank_3mo = nthCompare(data,90,"marketcap_rank", '--');
-                  const mc_usd_1d = nthCompare(data,2,"marketcap_usd", '--');
-                  const mc_usd_3d = nthCompare(data,3,"marketcap_usd", '--');
-                  const mc_usd_5d = nthCompare(data,5,"marketcap_usd", '--');
-                  const mc_usd_7d = nthCompare(data,7,"marketcap_usd", '--');
-                  const mc_usd_14d = nthCompare(data,14,"marketcap_usd", '--');
-                  const mc_usd_1mo = nthCompare(data,30,"marketcap_usd", '--');
-                  const mc_usd_2mo = nthCompare(data,60,"marketcap_usd", '--');
-                  const mc_usd_3mo= nthCompare(data,90,"marketcap_usd", '--');
+                const mc_rank_1d = nthCompare(sortedData,2,"marketcap_rank", '--');
+                const mc_rank_3d = nthCompare(sortedData,3,"marketcap_rank", '--');
+                const mc_rank_5d = nthCompare(sortedData,5,"marketcap_rank", '--');
+                const mc_rank_7d = nthCompare(sortedData,7,"marketcap_rank", '--');
+                const mc_rank_14d = nthCompare(sortedData,14,"marketcap_rank", '--');
+                const mc_rank_1mo = nthCompare(sortedData,30,"marketcap_rank", '--');
+                const mc_rank_2mo = nthCompare(sortedData,60,"marketcap_rank", '--');
+                const mc_rank_3mo = nthCompare(sortedData,90,"marketcap_rank", '--');
+                const mc_usd_1d = nthCompare(sortedData,2,"marketcap_usd", '--');
+                const mc_usd_3d = nthCompare(sortedData,3,"marketcap_usd", '--');
+                const mc_usd_5d = nthCompare(sortedData,5,"marketcap_usd", '--');
+                const mc_usd_7d = nthCompare(sortedData,7,"marketcap_usd", '--');
+                const mc_usd_14d = nthCompare(sortedData,14,"marketcap_usd", '--');
+                const mc_usd_1mo = nthCompare(sortedData,30,"marketcap_usd", '--');
+                const mc_usd_2mo = nthCompare(sortedData,60,"marketcap_usd", '--');
+                const mc_usd_3mo= nthCompare(sortedData,90,"marketcap_usd", '--');
                 
                 return (
                   <tr key={index}>

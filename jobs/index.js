@@ -8,7 +8,7 @@ const agenda = new Agenda({ db: { address: mongoDB } });
 // CMC API KEY
 const apiKey = process.env.COINMARKETCAP_APIKEY || "";
 // config - first x coins
-const tickers_limit = 2; // change this
+const tickers_limit = 150; // change this
 
 const client = new CoinMarketCap(apiKey);
 
