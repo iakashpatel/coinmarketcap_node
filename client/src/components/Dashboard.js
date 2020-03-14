@@ -66,7 +66,7 @@ function Dashboard() {
             : "")
         );
       } else {
-        return "-";
+        return "";
       }
     } catch (e) {
       console.log(e);
@@ -191,112 +191,112 @@ function Dashboard() {
                   1,
                   3,
                   "marketcap_rank",
-                  "-"
+                  ""
                 );
                 const mc_rank_change_3d = nthCompare(
                   sortedData,
                   3,
                   5,
                   "marketcap_rank",
-                  "-"
+                  ""
                 );
                 const mc_rank_change_5d = nthCompare(
                   sortedData,
                   5,
                   7,
                   "marketcap_rank",
-                  "-"
+                  ""
                 );
                 const mc_rank_change_7d = nthCompare(
                   sortedData,
                   7,
                   14,
                   "marketcap_rank",
-                  "-"
+                  ""
                 );
                 const mc_rank_change_14d = nthCompare(
                   sortedData,
                   14,
                   30,
                   "marketcap_rank",
-                  "-"
+                  ""
                 );
                 const mc_rank_change_1mo = nthCompare(
                   sortedData,
                   30,
                   60,
                   "marketcap_rank",
-                  "-"
+                  ""
                 );
                 const mc_rank_change_2mo = nthCompare(
                   sortedData,
                   60,
                   90,
                   "marketcap_rank",
-                  "-"
+                  ""
                 );
                 const mc_rank_change_3mo = nthCompare(
                   sortedData,
                   90,
                   90,
                   "marketcap_rank",
-                  "-"
+                  ""
                 );
                 const mc_rank_1d = getNth(
                   sortedData,
                   1,
                   3,
                   "marketcap_rank",
-                  "-"
+                  ""
                 );
                 const mc_rank_3d = getNth(
                   sortedData,
                   3,
                   5,
                   "marketcap_rank",
-                  "-"
+                  ""
                 );
                 const mc_rank_5d = getNth(
                   sortedData,
                   5,
                   7,
                   "marketcap_rank",
-                  "-"
+                  ""
                 );
                 const mc_rank_7d = getNth(
                   sortedData,
                   7,
                   14,
                   "marketcap_rank",
-                  "-"
+                  ""
                 );
                 const mc_rank_14d = getNth(
                   sortedData,
                   14,
                   30,
                   "marketcap_rank",
-                  "-"
+                  ""
                 );
                 const mc_rank_1mo = getNth(
                   sortedData,
                   30,
                   60,
                   "marketcap_rank",
-                  "-"
+                  ""
                 );
                 const mc_rank_2mo = getNth(
                   sortedData,
                   60,
                   90,
                   "marketcap_rank",
-                  "-"
+                  ""
                 );
                 const mc_rank_3mo = getNth(
                   sortedData,
                   90,
                   90,
                   "marketcap_rank",
-                  "-"
+                  ""
                 );
 
                 return (

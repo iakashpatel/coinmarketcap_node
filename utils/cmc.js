@@ -32,7 +32,7 @@ const createNewTicker = async (
 const fetchCoins = async (
   apiurl = "https://sandbox-api.coinmarketcap.com",
   day = getTodaysDate(),
-  coinsLimit = 20
+  coinsLimit = 50
 ) => {
   try {
     let url = `${apiurl}/v1/cryptocurrency/listings/historical?start=1&limit=${coinsLimit}&convert=USD&date=${day}`;
@@ -95,7 +95,7 @@ const generateDates = (startDate = getTodaysDate(), totalDays = 90) => {
 const pullDataAndStore = async (
   apiurl = "https://sandbox-api.coinmarketcap.com",
   day = getTodaysDate(),
-  coinsLimit = 20
+  coinsLimit = 50
 ) => {
   try {
     const result = await fetchCoins(apiurl, day, coinsLimit);

@@ -14,7 +14,7 @@ function loadDevSandboxData() {
   try {
     const apiurl = "https://sandbox-api.coinmarketcap.com";
     // change coin limit
-    const coinsLimit = 20;
+    const coinsLimit = 50;
 
     const startDay = "2019-08-29";
     const dates = generateDates(startDay, 12);
@@ -68,7 +68,7 @@ agenda.define("pull cmc data and save to database", async job => {
     const day = getTodaysDate();
     const apiurl = "https://pro-api.coinmarketcap.com";
     // change coin limit
-    const coinsLimit = 20;
+    const coinsLimit = 50;
 
     await pullDataAndStore(apiurl, day, coinsLimit);
   }

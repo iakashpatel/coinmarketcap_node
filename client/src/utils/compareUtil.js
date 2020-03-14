@@ -7,7 +7,7 @@ function nthCompare(
 ) {
   let result = {
     diff: default_value,
-    status: "-"
+    status: ""
   };
   const tempData = Object.assign([], data).reverse();
   if (tempData.length >= n1) {
@@ -29,8 +29,8 @@ function nthCompare(
       };
     } else {
       result = {
-        diff: "-",
-        status: "-"
+        diff: "",
+        status: ""
       };
     }
   }
@@ -42,11 +42,11 @@ function getNth(
   n = 1,
   n1 = 3,
   term = "marketcap_rank",
-  default_value = "-"
+  default_value = ""
 ) {
   let result = {
     diff: default_value,
-    status: "-"
+    status: ""
   };
   const tempData = Object.assign([], data).reverse();
   if (tempData.length >= n1) {
@@ -69,7 +69,7 @@ function getNth(
     } else {
       result = {
         diff: nthData[term],
-        status: "-"
+        status: ""
       };
     }
   } else if (tempData.length >= n) {
@@ -79,7 +79,7 @@ function getNth(
     } = tempData1;
     result = {
       diff: nthData[term],
-      status: "-"
+      status: ""
     };
   }
   return result;
