@@ -130,7 +130,7 @@ function Dashboard() {
           <Jumbotron>
             <h4>Identify trends & changes in marketcap rankings of crypto </h4>
           </Jumbotron>
-          <Table bordered hover striped size="sm" responsive>
+          <Table bordered hover size="sm" responsive>
             <colgroup span="5"></colgroup>
             <colgroup span="2"></colgroup>
             <colgroup span="2"></colgroup>
