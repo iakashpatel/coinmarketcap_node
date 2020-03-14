@@ -54,7 +54,7 @@ function App() {
   return (
     <div>
       <Navigation user={user} logout={logout} />
-      <Container>
+      <Container fluid>
         <Main />
       </Container>
     </div>
