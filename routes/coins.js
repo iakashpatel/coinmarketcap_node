@@ -12,11 +12,7 @@ router.get("/", authCheck, async function(req, res) {
       updated_timestamp: -1
     });
     const history_coins = _.chain(
-      _.sortBy(coins, [
-        function(o) {
-          return o.marketcap_rank;
-        }
-      ])
+      _.orderBy(coins, ["marketcap_rank", "updated_timestamp"], ["asc", "desc"])
     )
       .groupBy("ticker")
       .map((value, key) => ({ ticker: key, data: value }))
