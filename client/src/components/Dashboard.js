@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom";
 import socketIOClient from "socket.io-client";
 const axios = require("axios");
 const _ = require("lodash");
-const { nthCompare } = require("../utils/compareUtil");
+const { nthCompare, getNth } = require("../utils/compareUtil");
 
 function RenderSignal(props) {
   const { varient, children } = props;
@@ -73,12 +73,39 @@ function Dashboard() {
     }
   }
 
+  function getRankWiseSortedData(coinsData = []) {
+    const tempData = coinsData.sort(function(a, b) {
+      const { data: aData } = a;
+      const { data: bData } = b;
+
+      const asortedData = _.sortBy(aData, [
+        function(o) {
+          return o.updated_timestamp;
+        }
+      ]);
+
+      const bsortedData = _.sortBy(bData, [
+        function(o) {
+          return o.updated_timestamp;
+        }
+      ]);
+
+      const alatestData = Object.assign([], asortedData).pop();
+      const blatestData = Object.assign([], bsortedData).pop();
+      const { marketcap_rank: a_marketcap_rank } = alatestData;
+      const { marketcap_rank: b_marketcap_rank } = blatestData;
+      return a_marketcap_rank - b_marketcap_rank;
+    });
+    return tempData;
+  }
+
   async function fetchCoins() {
     try {
       const coins = await axios.get("/coins");
       const { data } = coins;
       const { coins: coinsData } = data;
-      setTickers(coinsData);
+      const tempData = getRankWiseSortedData(coinsData);
+      setTickers(tempData);
     } catch (error) {
       history.replace("/login");
       console.log("error-checkuser", error);
@@ -89,8 +116,9 @@ function Dashboard() {
     fetchCoins();
     const socket = socketIOClient(process.env.REACT_APP_BACKEND_URL);
     socket.on("FromAPI", data => {
-      console.log("updated!!");
-      setTickers(data);
+      console.log("socket updated data!!");
+      const tempData = getRankWiseSortedData(data);
+      setTickers(tempData);
     });
     // eslint-disable-next-line
   }, []);
@@ -148,6 +176,7 @@ function Dashboard() {
                     return o.updated_timestamp;
                   }
                 ]);
+
                 const latestData = Object.assign([], sortedData).pop();
                 const {
                   marketcap_rank,
@@ -156,24 +185,104 @@ function Dashboard() {
                   price_usd,
                   volume
                 } = latestData;
-                
-                const mc_rank_1d = nthCompare(sortedData,2,"marketcap_rank", '--');
-                const mc_rank_3d = nthCompare(sortedData,3,"marketcap_rank", '--');
-                const mc_rank_5d = nthCompare(sortedData,5,"marketcap_rank", '--');
-                const mc_rank_7d = nthCompare(sortedData,7,"marketcap_rank", '--');
-                const mc_rank_14d = nthCompare(sortedData,14,"marketcap_rank", '--');
-                const mc_rank_1mo = nthCompare(sortedData,30,"marketcap_rank", '--');
-                const mc_rank_2mo = nthCompare(sortedData,60,"marketcap_rank", '--');
-                const mc_rank_3mo = nthCompare(sortedData,90,"marketcap_rank", '--');
-                const mc_usd_1d = nthCompare(sortedData,2,"marketcap_usd", '--');
-                const mc_usd_3d = nthCompare(sortedData,3,"marketcap_usd", '--');
-                const mc_usd_5d = nthCompare(sortedData,5,"marketcap_usd", '--');
-                const mc_usd_7d = nthCompare(sortedData,7,"marketcap_usd", '--');
-                const mc_usd_14d = nthCompare(sortedData,14,"marketcap_usd", '--');
-                const mc_usd_1mo = nthCompare(sortedData,30,"marketcap_usd", '--');
-                const mc_usd_2mo = nthCompare(sortedData,60,"marketcap_usd", '--');
-                const mc_usd_3mo= nthCompare(sortedData,90,"marketcap_usd", '--');
-                
+
+                const mc_rank_change_1d = nthCompare(
+                  sortedData,
+                  1,
+                  "marketcap_rank",
+                  "--"
+                );
+                const mc_rank_change_3d = nthCompare(
+                  sortedData,
+                  3,
+                  "marketcap_rank",
+                  "--"
+                );
+                const mc_rank_change_5d = nthCompare(
+                  sortedData,
+                  5,
+                  "marketcap_rank",
+                  "--"
+                );
+                const mc_rank_change_7d = nthCompare(
+                  sortedData,
+                  7,
+                  "marketcap_rank",
+                  "--"
+                );
+                const mc_rank_change_14d = nthCompare(
+                  sortedData,
+                  14,
+                  "marketcap_rank",
+                  "--"
+                );
+                const mc_rank_change_1mo = nthCompare(
+                  sortedData,
+                  30,
+                  "marketcap_rank",
+                  "--"
+                );
+                const mc_rank_change_2mo = nthCompare(
+                  sortedData,
+                  60,
+                  "marketcap_rank",
+                  "--"
+                );
+                const mc_rank_change_3mo = nthCompare(
+                  sortedData,
+                  90,
+                  "marketcap_rank",
+                  "--"
+                );
+                const mc_rank_1d = getNth(
+                  sortedData,
+                  1,
+                  "marketcap_rank",
+                  "--"
+                );
+                const mc_rank_3d = getNth(
+                  sortedData,
+                  3,
+                  "marketcap_rank",
+                  "--"
+                );
+                const mc_rank_5d = getNth(
+                  sortedData,
+                  5,
+                  "marketcap_rank",
+                  "--"
+                );
+                const mc_rank_7d = getNth(
+                  sortedData,
+                  7,
+                  "marketcap_rank",
+                  "--"
+                );
+                const mc_rank_14d = getNth(
+                  sortedData,
+                  14,
+                  "marketcap_rank",
+                  "--"
+                );
+                const mc_rank_1mo = getNth(
+                  sortedData,
+                  30,
+                  "marketcap_rank",
+                  "--"
+                );
+                const mc_rank_2mo = getNth(
+                  sortedData,
+                  60,
+                  "marketcap_rank",
+                  "--"
+                );
+                const mc_rank_3mo = getNth(
+                  sortedData,
+                  90,
+                  "marketcap_rank",
+                  "--"
+                );
+
                 return (
                   <tr key={index}>
                     <td>{marketcap_rank}</td>
@@ -182,7 +291,7 @@ function Dashboard() {
                     <td>{formatMoney(price_usd, 2, ".", ",")}</td>
                     <td>{formatMoney(volume, 2, ".", ",")}</td>
 
-                    {/* MC Rank change  */}
+                    {/* MC Rank  */}
                     <td>
                       <RenderSignal varient={mc_rank_1d.status}>
                         {mc_rank_1d.diff}
@@ -224,45 +333,45 @@ function Dashboard() {
                       </RenderSignal>
                     </td>
 
-                    {/* MC change  */}
+                    {/* MC Rank change  */}
                     <td>
-                      <RenderSignal varient={mc_usd_1d.status}>
-                        {formatMoney(mc_usd_1d.diff, 2, ".", ",")}
+                      <RenderSignal varient={mc_rank_change_1d.status}>
+                        {mc_rank_change_1d.diff}
                       </RenderSignal>
                     </td>
                     <td>
-                      <RenderSignal varient={mc_usd_3d.status}>
-                        {formatMoney(mc_usd_3d.diff, 2, ".", ",")}
+                      <RenderSignal varient={mc_rank_change_3d.status}>
+                        {mc_rank_change_3d.diff}
                       </RenderSignal>
                     </td>
                     <td>
-                      <RenderSignal varient={mc_usd_5d.status}>
-                        {formatMoney(mc_usd_5d.diff, 2, ".", ",")}
+                      <RenderSignal varient={mc_rank_change_5d.status}>
+                        {mc_rank_change_5d.diff}
                       </RenderSignal>
                     </td>
                     <td>
-                      <RenderSignal varient={mc_usd_7d.status}>
-                        {formatMoney(mc_usd_7d.diff, 2, ".", ",")}
+                      <RenderSignal varient={mc_rank_change_7d.status}>
+                        {mc_rank_change_7d.diff}
                       </RenderSignal>
                     </td>
                     <td>
-                      <RenderSignal varient={mc_usd_14d.status}>
-                        {formatMoney(mc_usd_14d.diff, 2, ".", ",")}
+                      <RenderSignal varient={mc_rank_change_14d.status}>
+                        {mc_rank_change_14d.diff}
                       </RenderSignal>
                     </td>
                     <td>
-                      <RenderSignal varient={mc_usd_1mo.status}>
-                        {formatMoney(mc_usd_1mo.diff, 2, ".", ",")}
+                      <RenderSignal varient={mc_rank_change_1mo.status}>
+                        {mc_rank_change_1mo.diff}
                       </RenderSignal>
                     </td>
                     <td>
-                      <RenderSignal varient={mc_usd_2mo.status}>
-                        {formatMoney(mc_usd_2mo.diff, 2, ".", ",")}
+                      <RenderSignal varient={mc_rank_change_2mo.status}>
+                        {mc_rank_change_2mo.diff}
                       </RenderSignal>
                     </td>
                     <td>
-                      <RenderSignal varient={mc_usd_3mo.status}>
-                        {formatMoney(mc_usd_3mo.diff, 2, ".", ",")}
+                      <RenderSignal varient={mc_rank_change_3mo.status}>
+                        {mc_rank_change_3mo.diff}
                       </RenderSignal>
                     </td>
                   </tr>
