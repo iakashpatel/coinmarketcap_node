@@ -18,13 +18,13 @@ code {
   margin-left: 10px;
 }
 
-.container,
+/* .container,
 .container-lg,
 .container-md,
 .container-sm,
 .container-xl {
   max-width: 100% !important;
-}
+} */
 
 .low {
   color: #DC3545;
