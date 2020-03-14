@@ -52,10 +52,12 @@ function App() {
   }, []);
 
   return (
-    <Container>
+    <div>
       <Navigation user={user} logout={logout} />
-      <Main />
-    </Container>
+      <Container>
+        <Main />
+      </Container>
+    </div>
   );
 }
 
