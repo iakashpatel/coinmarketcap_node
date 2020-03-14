@@ -55,7 +55,11 @@ async function loadInitialData() {
       .catch(error => console.log(error));
   } else {
     // NODE_ENV = production
-    loadRealLast90DaysData();
+    Tickers.deleteMany({})
+      .then(() => {
+        loadRealLast90DaysData();
+      })
+      .catch(error => console.log(error));
   }
 }
 
