@@ -128,9 +128,9 @@ function Dashboard() {
       <Row>
         <Col xs={12} md={12}>
           <Jumbotron>
-            <h1>Welcome to Coinmarketcap!</h1>
+            <h4>Identify trends & changes in marketcap rankings of crypto </h4>
           </Jumbotron>
-          <Table bordered hover>
+          <Table bordered hover striped size="sm" responsive>
             <colgroup span="5"></colgroup>
             <colgroup span="2"></colgroup>
             <colgroup span="2"></colgroup>

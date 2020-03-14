@@ -8,9 +8,9 @@ function Navigation(props) {
 
   return (
     <Navbar bg="dark" variant="dark">
-      <Navbar.Brand href="/">coinmarketcap</Navbar.Brand>
+      <Navbar.Brand href="/">Coinmarketcap Tracker</Navbar.Brand>
       <Nav className="mr-auto">
-        <Nav.Link href="/">Home</Nav.Link>
+        {/* <Nav.Link href="/">Home</Nav.Link> */}
       </Nav>
       <Nav>
         {!authenticated && <Nav.Link href="/signup">Register</Nav.Link>}
