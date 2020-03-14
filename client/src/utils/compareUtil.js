@@ -72,6 +72,15 @@ function getNth(
         status: "-"
       };
     }
+  } else if (tempData.length >= n) {
+    const tempData1 = { data: tempData };
+    const {
+      data: { [n - 1]: nthData }
+    } = tempData1;
+    result = {
+      diff: nthData[term],
+      status: "-"
+    };
   }
   return result;
 }
