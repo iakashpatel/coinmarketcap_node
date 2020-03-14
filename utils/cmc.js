@@ -18,7 +18,7 @@ const createNewTicker = async (
       ticker: symbol,
       marketcap_rank: cmc_rank,
       price_usd: price,
-      volumne: volume_24h,
+      volume: volume_24h,
       marketcap_usd: market_cap,
       timestamp: last_updated,
       updated_timestamp: new Date(last_updated).getTime()
@@ -120,7 +120,7 @@ const pullDataAndStore = async (
           ticker.name = name;
           ticker.marketcap_rank = cmc_rank;
           ticker.price_usd = price;
-          ticker.volumne = volume_24h;
+          ticker.volume = volume_24h;
           ticker.marketcap_usd = market_cap;
           ticker.timestamp = last_updated;
           ticker.updated_timestamp = new Date(last_updated).getTime();
