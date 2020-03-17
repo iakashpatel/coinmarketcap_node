@@ -351,6 +351,7 @@ function Dashboard() {
           <Row>
             <Col xs={12} md={12}>
               <ToolkitProvider
+                bootstrap4
                 keyField="id"
                 data={data}
                 columns={columns}
@@ -365,7 +366,12 @@ function Dashboard() {
                     <hr />
                     <ToggleList {...props.columnToggleProps} />
                     <hr />
-                    <BootstrapTable {...props.baseProps} />
+                    <BootstrapTable
+                      hover
+                      // striped
+                      bordered
+                      condensed
+                      {...props.baseProps} />
                   </div>
                 )}
               </ToolkitProvider>
