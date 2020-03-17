@@ -1,77 +1,179 @@
 import React, { useState, useEffect } from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Table from "react-bootstrap/Table";
 import Jumbotron from "react-bootstrap/Jumbotron";
 import { useHistory } from "react-router-dom";
+import BootstrapTable from "react-bootstrap-table-next";
+import ToolkitProvider, {
+  ColumnToggle,
+  Search
+} from "react-bootstrap-table2-toolkit";
 import socketIOClient from "socket.io-client";
+import { nthCompare, getNth, formatMoney } from "../utils/dashboardUtil";
 const axios = require("axios");
 const _ = require("lodash");
-const { nthCompare, getNth } = require("../utils/compareUtil");
 
-function RenderSignal(props) {
-  const { varient, children } = props;
+const { ToggleList } = ColumnToggle;
+const { SearchBar, ClearSearchButton } = Search;
+
+function renderSignal(cell) {
+  const { status: varient = "", diff: value } = cell;
   if (varient === "high") {
     return (
       <span className="high">
-        {children}
+        {value}
         <img src="/high.png" alt="high signal" className="up-down-icons" />
       </span>
     );
   } else if (varient === "low") {
     return (
       <span className="low">
-        {children}
+        {value}
         <img src="/low.png" alt="low signal" className="up-down-icons" />
       </span>
     );
   } else {
-    return <span>{children}</span>;
+    return <span>{value}</span>;
   }
 }
+
+const columns = [
+  {
+    dataField: "marketcap_rank",
+    text: "#",
+    sort: true
+  },
+  {
+    dataField: "name",
+    text: "Name",
+    sort: true
+  },
+  {
+    dataField: "marketcap_usd",
+    text: "Marketcap",
+    sort: true,
+    formatter: cell => formatMoney(cell)
+  },
+  {
+    dataField: "price_usd",
+    text: "Price",
+    sort: true,
+    formatter: cell => formatMoney(cell)
+  },
+  {
+    dataField: "volume",
+    text: "Volume",
+    sort: true,
+    formatter: cell => formatMoney(cell)
+  },
+  {
+    dataField: "mc_rank_change_1d",
+    text: "Rank Change 1d",
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+    dataField: "mc_rank_change_3d",
+    text: "Rank Change 3d",
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+    dataField: "mc_rank_change_5d",
+    text: "Rank Change 5d",
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+    dataField: "mc_rank_change_7d",
+    text: "Rank Change 7d",
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+    dataField: "mc_rank_change_14d",
+    text: "Rank Change 14d",
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+    dataField: "mc_rank_change_1mo",
+    text: "Rank Change 1mo",
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+    dataField: "mc_rank_change_2mo",
+    text: "Rank Change 2mo",
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+    dataField: "mc_rank_change_3mo",
+    text: "Rank Change 3mo",
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+    dataField: "mc_rank_1d",
+    text: "Rank 1d",
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+    dataField: "mc_rank_3d",
+    text: "Rank 3d",
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+    dataField: "mc_rank_5d",
+    text: "Rank 5d",
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+    dataField: "mc_rank_7d",
+    text: "Rank 7d",
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+    dataField: "mc_rank_14d",
+    text: "Rank 14d",
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+    dataField: "mc_rank_1mo",
+    text: "Rank 1mo",
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+    dataField: "mc_rank_2mo",
+    text: "Rank 2mo",
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+    dataField: "mc_rank_3mo",
+    text: "Rank 3mo",
+    sort: true,
+    formatter: renderSignal
+  }
+];
+
+const defaultSorted = [
+  {
+    dataField: "marketcap_rank",
+    order: "asc"
+  }
+];
 
 function Dashboard() {
   let history = useHistory();
   const [tickers, setTickers] = useState([]);
-
-  function formatMoney(
-    amount,
-    decimalCount = 2,
-    decimal = ".",
-    thousands = ",",
-    sign = "$"
-  ) {
-    try {
-      if (!isNaN(amount)) {
-        decimalCount = Math.abs(decimalCount);
-        decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
-
-        const negativeSign = amount < 0 ? "-" : "";
-
-        let i = parseInt(
-          (amount = Math.abs(Number(amount) || 0).toFixed(decimalCount))
-        ).toString();
-        let j = i.length > 3 ? i.length % 3 : 0;
-
-        return (
-          negativeSign +
-          sign +
-          (j ? i.substr(0, j) + thousands : "") +
-          i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) +
-          (decimalCount
-            ? decimal +
-              Math.abs(amount - i)
-                .toFixed(decimalCount)
-                .slice(2)
-            : "")
-        );
-      } else {
-        return "";
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
 
   function getRankWiseSortedData(coinsData = []) {
     const tempData = coinsData.sort(function(a, b) {
@@ -99,6 +201,117 @@ function Dashboard() {
     return tempData;
   }
 
+  function tableData() {
+    return tickers.map(item => {
+      const { data } = item;
+      const sortedData = _.sortBy(data, [
+        function(o) {
+          return o.updated_timestamp;
+        }
+      ]);
+
+      const latestData = Object.assign([], sortedData).pop();
+      const {
+        _id: id,
+        marketcap_rank,
+        marketcap_usd,
+        name,
+        price_usd,
+        volume
+      } = latestData;
+
+      const mc_rank_change_1d = nthCompare(
+        sortedData,
+        1,
+        3,
+        "marketcap_rank",
+        ""
+      );
+      const mc_rank_change_3d = nthCompare(
+        sortedData,
+        3,
+        5,
+        "marketcap_rank",
+        ""
+      );
+      const mc_rank_change_5d = nthCompare(
+        sortedData,
+        5,
+        7,
+        "marketcap_rank",
+        ""
+      );
+      const mc_rank_change_7d = nthCompare(
+        sortedData,
+        7,
+        14,
+        "marketcap_rank",
+        ""
+      );
+      const mc_rank_change_14d = nthCompare(
+        sortedData,
+        14,
+        30,
+        "marketcap_rank",
+        ""
+      );
+      const mc_rank_change_1mo = nthCompare(
+        sortedData,
+        30,
+        60,
+        "marketcap_rank",
+        ""
+      );
+      const mc_rank_change_2mo = nthCompare(
+        sortedData,
+        60,
+        90,
+        "marketcap_rank",
+        ""
+      );
+      const mc_rank_change_3mo = nthCompare(
+        sortedData,
+        90,
+        90,
+        "marketcap_rank",
+        ""
+      );
+      const mc_rank_1d = getNth(sortedData, 1, 3, "marketcap_rank", "");
+      const mc_rank_3d = getNth(sortedData, 3, 5, "marketcap_rank", "");
+      const mc_rank_5d = getNth(sortedData, 5, 7, "marketcap_rank", "");
+      const mc_rank_7d = getNth(sortedData, 7, 14, "marketcap_rank", "");
+      const mc_rank_14d = getNth(sortedData, 14, 30, "marketcap_rank", "");
+      const mc_rank_1mo = getNth(sortedData, 30, 60, "marketcap_rank", "");
+      const mc_rank_2mo = getNth(sortedData, 60, 90, "marketcap_rank", "");
+      const mc_rank_3mo = getNth(sortedData, 90, 90, "marketcap_rank", "");
+
+      return {
+        id,
+        marketcap_rank,
+        marketcap_usd,
+        name,
+        price_usd,
+        volume,
+        mc_rank_change_1d,
+        mc_rank_change_3d,
+        mc_rank_change_5d,
+        mc_rank_change_7d,
+        mc_rank_change_14d,
+        mc_rank_change_1mo,
+        mc_rank_change_2mo,
+        mc_rank_change_3mo,
+        mc_rank_1d,
+        mc_rank_3d,
+        mc_rank_5d,
+        mc_rank_7d,
+        mc_rank_14d,
+        mc_rank_1mo,
+        mc_rank_2mo,
+        mc_rank_3mo
+      };
+    });
+  }
+
   async function fetchCoins() {
     try {
       const coins = await axios.get("/coins");
@@ -123,278 +336,41 @@ function Dashboard() {
     // eslint-disable-next-line
   }, []);
 
+  const data = tableData();
+
   return (
     <div>
       <Row>
         <Col xs={12} md={12}>
           <Jumbotron>
-            <h4>Identify trends & changes in marketcap rankings of crypto </h4>
+            <h4>
+              {"Identify trends & changes in marketcap rankings of crypto"}{" "}
+            </h4>
           </Jumbotron>
-          <Table bordered hover size="sm" responsive>
-            <colgroup span="5"></colgroup>
-            <colgroup span="2"></colgroup>
-            <colgroup span="2"></colgroup>
-            <thead>
-              <tr>
-                <td colSpan="5"></td>
-                <th colSpan="8" scope="colgroup">
-                  MC rank
-                </th>
-                <th colSpan="8" scope="colgroup">
-                  MC change
-                </th>
-              </tr>
-              <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Marketcap</th>
-                <th>Price</th>
-                <th>Volume</th>
-                <th>1d</th>
-                <th>3d</th>
-                <th>5d</th>
-                <th>7d</th>
-                <th>14d</th>
-                <th>1mo</th>
-                <th>2mo</th>
-                <th>3mo</th>
-                <th>1d</th>
-                <th>3d</th>
-                <th>5d</th>
-                <th>7d</th>
-                <th>14d</th>
-                <th>1mo</th>
-                <th>2mo</th>
-                <th>3mo</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tickers.map((item, index) => {
-                const { data } = item;
-                const sortedData = _.sortBy(data, [
-                  function(o) {
-                    return o.updated_timestamp;
-                  }
-                ]);
 
-                const latestData = Object.assign([], sortedData).pop();
-                const {
-                  marketcap_rank,
-                  marketcap_usd,
-                  name,
-                  price_usd,
-                  volume
-                } = latestData;
-
-                const mc_rank_change_1d = nthCompare(
-                  sortedData,
-                  1,
-                  3,
-                  "marketcap_rank",
-                  ""
-                );
-                const mc_rank_change_3d = nthCompare(
-                  sortedData,
-                  3,
-                  5,
-                  "marketcap_rank",
-                  ""
-                );
-                const mc_rank_change_5d = nthCompare(
-                  sortedData,
-                  5,
-                  7,
-                  "marketcap_rank",
-                  ""
-                );
-                const mc_rank_change_7d = nthCompare(
-                  sortedData,
-                  7,
-                  14,
-                  "marketcap_rank",
-                  ""
-                );
-                const mc_rank_change_14d = nthCompare(
-                  sortedData,
-                  14,
-                  30,
-                  "marketcap_rank",
-                  ""
-                );
-                const mc_rank_change_1mo = nthCompare(
-                  sortedData,
-                  30,
-                  60,
-                  "marketcap_rank",
-                  ""
-                );
-                const mc_rank_change_2mo = nthCompare(
-                  sortedData,
-                  60,
-                  90,
-                  "marketcap_rank",
-                  ""
-                );
-                const mc_rank_change_3mo = nthCompare(
-                  sortedData,
-                  90,
-                  90,
-                  "marketcap_rank",
-                  ""
-                );
-                const mc_rank_1d = getNth(
-                  sortedData,
-                  1,
-                  3,
-                  "marketcap_rank",
-                  ""
-                );
-                const mc_rank_3d = getNth(
-                  sortedData,
-                  3,
-                  5,
-                  "marketcap_rank",
-                  ""
-                );
-                const mc_rank_5d = getNth(
-                  sortedData,
-                  5,
-                  7,
-                  "marketcap_rank",
-                  ""
-                );
-                const mc_rank_7d = getNth(
-                  sortedData,
-                  7,
-                  14,
-                  "marketcap_rank",
-                  ""
-                );
-                const mc_rank_14d = getNth(
-                  sortedData,
-                  14,
-                  30,
-                  "marketcap_rank",
-                  ""
-                );
-                const mc_rank_1mo = getNth(
-                  sortedData,
-                  30,
-                  60,
-                  "marketcap_rank",
-                  ""
-                );
-                const mc_rank_2mo = getNth(
-                  sortedData,
-                  60,
-                  90,
-                  "marketcap_rank",
-                  ""
-                );
-                const mc_rank_3mo = getNth(
-                  sortedData,
-                  90,
-                  90,
-                  "marketcap_rank",
-                  ""
-                );
-
-                return (
-                  <tr key={index}>
-                    <td>{marketcap_rank}</td>
-                    <td>{name}</td>
-                    <td>{formatMoney(marketcap_usd, 2, ".", ",")}</td>
-                    <td>{formatMoney(price_usd, 2, ".", ",")}</td>
-                    <td>{formatMoney(volume, 2, ".", ",")}</td>
-
-                    {/* MC Rank  */}
-                    <td>
-                      <RenderSignal varient={mc_rank_1d.status}>
-                        {mc_rank_1d.diff}
-                      </RenderSignal>
-                    </td>
-                    <td>
-                      <RenderSignal varient={mc_rank_3d.status}>
-                        {mc_rank_3d.diff}
-                      </RenderSignal>
-                    </td>
-                    <td>
-                      <RenderSignal varient={mc_rank_5d.status}>
-                        {mc_rank_5d.diff}
-                      </RenderSignal>
-                    </td>
-                    <td>
-                      <RenderSignal varient={mc_rank_7d.status}>
-                        {mc_rank_7d.diff}
-                      </RenderSignal>
-                    </td>
-                    <td>
-                      <RenderSignal varient={mc_rank_14d.status}>
-                        {mc_rank_14d.diff}
-                      </RenderSignal>
-                    </td>
-                    <td>
-                      <RenderSignal varient={mc_rank_1mo.status}>
-                        {mc_rank_1mo.diff}
-                      </RenderSignal>
-                    </td>
-                    <td>
-                      <RenderSignal varient={mc_rank_2mo.status}>
-                        {mc_rank_2mo.diff}
-                      </RenderSignal>
-                    </td>
-                    <td>
-                      <RenderSignal varient={mc_rank_3mo.status}>
-                        {mc_rank_3mo.diff}
-                      </RenderSignal>
-                    </td>
-
-                    {/* MC Rank change  */}
-                    <td>
-                      <RenderSignal varient={mc_rank_change_1d.status}>
-                        {mc_rank_change_1d.diff}
-                      </RenderSignal>
-                    </td>
-                    <td>
-                      <RenderSignal varient={mc_rank_change_3d.status}>
-                        {mc_rank_change_3d.diff}
-                      </RenderSignal>
-                    </td>
-                    <td>
-                      <RenderSignal varient={mc_rank_change_5d.status}>
-                        {mc_rank_change_5d.diff}
-                      </RenderSignal>
-                    </td>
-                    <td>
-                      <RenderSignal varient={mc_rank_change_7d.status}>
-                        {mc_rank_change_7d.diff}
-                      </RenderSignal>
-                    </td>
-                    <td>
-                      <RenderSignal varient={mc_rank_change_14d.status}>
-                        {mc_rank_change_14d.diff}
-                      </RenderSignal>
-                    </td>
-                    <td>
-                      <RenderSignal varient={mc_rank_change_1mo.status}>
-                        {mc_rank_change_1mo.diff}
-                      </RenderSignal>
-                    </td>
-                    <td>
-                      <RenderSignal varient={mc_rank_change_2mo.status}>
-                        {mc_rank_change_2mo.diff}
-                      </RenderSignal>
-                    </td>
-                    <td>
-                      <RenderSignal varient={mc_rank_change_3mo.status}>
-                        {mc_rank_change_3mo.diff}
-                      </RenderSignal>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </Table>
+          <Row>
+            <Col xs={12} md={12}>
+              <ToolkitProvider
+                keyField="id"
+                data={data}
+                columns={columns}
+                columnToggle
+                defaultSorted={defaultSorted}
+                search
+              >
+                {props => (
+                  <div>
+                    <SearchBar {...props.searchProps} />
+                    <ClearSearchButton {...props.searchProps} />
+                    <hr />
+                    <ToggleList {...props.columnToggleProps} />
+                    <hr />
+                    <BootstrapTable {...props.baseProps} />
+                  </div>
+                )}
+              </ToolkitProvider>
+            </Col>
+          </Row>
         </Col>
       </Row>
     </div>
