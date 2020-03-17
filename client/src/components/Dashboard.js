@@ -17,15 +17,15 @@ const { ToggleList } = ColumnToggle;
 const { SearchBar, ClearSearchButton } = Search;
 
 function renderSignal(cell) {
-  const { status: varient = "", diff: value } = cell;
-  if (varient === "high") {
+  const [value = "", varient = ""] = cell.split("-S-");
+  if (varient === "2") {
     return (
       <span className="high">
         {value}
         <img src="/high.png" alt="high signal" className="up-down-icons" />
       </span>
     );
-  } else if (varient === "low") {
+  } else if (varient === "0") {
     return (
       <span className="low">
         {value}
@@ -65,54 +65,6 @@ const columns = [
     text: "Volume",
     sort: true,
     formatter: cell => formatMoney(cell)
-  },
-  {
-    dataField: "mc_rank_change_1d",
-    text: "Rank Change 1d",
-    sort: true,
-    formatter: renderSignal
-  },
-  {
-    dataField: "mc_rank_change_3d",
-    text: "Rank Change 3d",
-    sort: true,
-    formatter: renderSignal
-  },
-  {
-    dataField: "mc_rank_change_5d",
-    text: "Rank Change 5d",
-    sort: true,
-    formatter: renderSignal
-  },
-  {
-    dataField: "mc_rank_change_7d",
-    text: "Rank Change 7d",
-    sort: true,
-    formatter: renderSignal
-  },
-  {
-    dataField: "mc_rank_change_14d",
-    text: "Rank Change 14d",
-    sort: true,
-    formatter: renderSignal
-  },
-  {
-    dataField: "mc_rank_change_1mo",
-    text: "Rank Change 1mo",
-    sort: true,
-    formatter: renderSignal
-  },
-  {
-    dataField: "mc_rank_change_2mo",
-    text: "Rank Change 2mo",
-    sort: true,
-    formatter: renderSignal
-  },
-  {
-    dataField: "mc_rank_change_3mo",
-    text: "Rank Change 3mo",
-    sort: true,
-    formatter: renderSignal
   },
   {
     dataField: "mc_rank_1d",
@@ -159,6 +111,54 @@ const columns = [
   {
     dataField: "mc_rank_3mo",
     text: "Rank 3mo",
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+    dataField: "mc_rank_change_1d",
+    text: "Rank Change 1d",
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+    dataField: "mc_rank_change_3d",
+    text: "Rank Change 3d",
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+    dataField: "mc_rank_change_5d",
+    text: "Rank Change 5d",
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+    dataField: "mc_rank_change_7d",
+    text: "Rank Change 7d",
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+    dataField: "mc_rank_change_14d",
+    text: "Rank Change 14d",
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+    dataField: "mc_rank_change_1mo",
+    text: "Rank Change 1mo",
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+    dataField: "mc_rank_change_2mo",
+    text: "Rank Change 2mo",
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+    dataField: "mc_rank_change_3mo",
+    text: "Rank Change 3mo",
     sort: true,
     formatter: renderSignal
   }
