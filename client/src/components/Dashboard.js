@@ -116,49 +116,49 @@ const columns = [
   },
   {
     dataField: "mc_rank_change_1d",
-    text: "Rank Change 1d",
+    text: "RC 1d",
     sort: true,
     formatter: renderSignal
   },
   {
     dataField: "mc_rank_change_3d",
-    text: "Rank Change 3d",
+    text: "RC 3d",
     sort: true,
     formatter: renderSignal
   },
   {
     dataField: "mc_rank_change_5d",
-    text: "Rank Change 5d",
+    text: "RC 5d",
     sort: true,
     formatter: renderSignal
   },
   {
     dataField: "mc_rank_change_7d",
-    text: "Rank Change 7d",
+    text: "RC 7d",
     sort: true,
     formatter: renderSignal
   },
   {
     dataField: "mc_rank_change_14d",
-    text: "Rank Change 14d",
+    text: "RC 14d",
     sort: true,
     formatter: renderSignal
   },
   {
     dataField: "mc_rank_change_1mo",
-    text: "Rank Change 1mo",
+    text: "RC 1mo",
     sort: true,
     formatter: renderSignal
   },
   {
     dataField: "mc_rank_change_2mo",
-    text: "Rank Change 2mo",
+    text: "RC 2mo",
     sort: true,
     formatter: renderSignal
   },
   {
     dataField: "mc_rank_change_3mo",
-    text: "Rank Change 3mo",
+    text: "RC 3mo",
     sort: true,
     formatter: renderSignal
   }
@@ -351,6 +351,7 @@ function Dashboard() {
           <Row>
             <Col xs={12} md={12}>
               <ToolkitProvider
+                bootstrap4
                 keyField="id"
                 data={data}
                 columns={columns}
@@ -365,7 +366,12 @@ function Dashboard() {
                     <hr />
                     <ToggleList {...props.columnToggleProps} />
                     <hr />
-                    <BootstrapTable {...props.baseProps} />
+                    <BootstrapTable
+                      hover
+                      // striped
+                      bordered
+                      condensed
+                      {...props.baseProps} />
                   </div>
                 )}
               </ToolkitProvider>
