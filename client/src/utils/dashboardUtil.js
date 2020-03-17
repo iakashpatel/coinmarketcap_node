@@ -3,12 +3,9 @@ function nthCompare(
   n = 1,
   n1 = 3,
   term = "marketcap_rank",
-  default_value = 0
+  default_value = ""
 ) {
-  let result = {
-    diff: default_value,
-    status: ""
-  };
+  let result = `${default_value}-S-1`;
   const tempData = Object.assign([], data).reverse();
   if (tempData.length >= n1) {
     const tempData1 = { data: tempData };
@@ -18,20 +15,9 @@ function nthCompare(
 
     let sum = n1thData[term] - nthData[term];
     if (sum < 0) {
-      result = {
-        diff: sum,
-        status: "low"
-      };
+      result = `${sum}-S-0`;
     } else if (sum > 0) {
-      result = {
-        diff: sum,
-        status: "high"
-      };
-    } else {
-      result = {
-        diff: "",
-        status: ""
-      };
+      result = `${sum}-S-2`;
     }
   }
   return result;
@@ -44,10 +30,7 @@ function getNth(
   term = "marketcap_rank",
   default_value = ""
 ) {
-  let result = {
-    diff: default_value,
-    status: ""
-  };
+  let result = `${default_value}-S-1`;
   const tempData = Object.assign([], data).reverse();
   if (tempData.length >= n1) {
     const tempData1 = { data: tempData };
@@ -57,30 +40,18 @@ function getNth(
 
     let sum = n1thData[term] - nthData[term];
     if (sum < 0) {
-      result = {
-        diff: nthData[term],
-        status: "low"
-      };
+      result = `${nthData[term]}-S-0`;
     } else if (sum > 0) {
-      result = {
-        diff: nthData[term],
-        status: "high"
-      };
+      result = `${nthData[term]}-S-2`;
     } else {
-      result = {
-        diff: nthData[term],
-        status: ""
-      };
+      result = `${nthData[term]}-S-1`;
     }
   } else if (tempData.length >= n) {
     const tempData1 = { data: tempData };
     const {
       data: { [n - 1]: nthData }
     } = tempData1;
-    result = {
-      diff: nthData[term],
-      status: ""
-    };
+    result = `${nthData[term]}-S-1`;
   }
   return result;
 }

@@ -17,15 +17,15 @@ const { ToggleList } = ColumnToggle;
 const { SearchBar, ClearSearchButton } = Search;
 
 function renderSignal(cell) {
-  const { status: varient = "", diff: value } = cell;
-  if (varient === "high") {
+  const [value = "", varient = ""] = cell.split("-S-");
+  if (varient === "2") {
     return (
       <span className="high">
         {value}
         <img src="/high.png" alt="high signal" className="up-down-icons" />
       </span>
     );
-  } else if (varient === "low") {
+  } else if (varient === "0") {
     return (
       <span className="low">
         {value}
@@ -67,54 +67,6 @@ const columns = [
     formatter: cell => formatMoney(cell)
   },
   {
-    dataField: "mc_rank_change_1d",
-    text: "RC 1d",
-    sort: true,
-    formatter: renderSignal
-  },
-  {
-    dataField: "mc_rank_change_3d",
-    text: "RC 3d",
-    sort: true,
-    formatter: renderSignal
-  },
-  {
-    dataField: "mc_rank_change_5d",
-    text: "RC 5d",
-    sort: true,
-    formatter: renderSignal
-  },
-  {
-    dataField: "mc_rank_change_7d",
-    text: "RC 7d",
-    sort: true,
-    formatter: renderSignal
-  },
-  {
-    dataField: "mc_rank_change_9d",
-    text: "RC 9d",
-    sort: true,
-    formatter: renderSignal
-  },
-  {
-    dataField: "mc_rank_change_11d",
-    text: "RC 11d",
-    sort: true,
-    formatter: renderSignal
-  },
-  {
-    dataField: "mc_rank_change_13d",
-    text: "RC 13d",
-    sort: true,
-    formatter: renderSignal
-  },
-  {
-    dataField: "mc_rank_change_21d",
-    text: "RC 21d",
-    sort: true,
-    formatter: renderSignal
-  },
-  {
     dataField: "mc_rank_1d",
     text: "Rank 1d",
     sort: true,
@@ -139,26 +91,114 @@ const columns = [
     formatter: renderSignal
   },
   {
+<<<<<<< HEAD
+    dataField: "mc_rank_change_9d",
+    text: "RC 9d",
+=======
+    dataField: "mc_rank_14d",
+    text: "Rank 14d",
+>>>>>>> 883077ffb6f57a9f471057ba005c30a8b4acffdc
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+<<<<<<< HEAD
+    dataField: "mc_rank_change_11d",
+    text: "RC 11d",
+=======
+    dataField: "mc_rank_1mo",
+    text: "Rank 1mo",
+>>>>>>> 883077ffb6f57a9f471057ba005c30a8b4acffdc
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+<<<<<<< HEAD
+    dataField: "mc_rank_change_13d",
+    text: "RC 13d",
+=======
+    dataField: "mc_rank_2mo",
+    text: "Rank 2mo",
+>>>>>>> 883077ffb6f57a9f471057ba005c30a8b4acffdc
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+<<<<<<< HEAD
+    dataField: "mc_rank_change_21d",
+    text: "RC 21d",
+=======
+    dataField: "mc_rank_3mo",
+    text: "Rank 3mo",
+>>>>>>> 883077ffb6f57a9f471057ba005c30a8b4acffdc
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+    dataField: "mc_rank_change_1d",
+    text: "RC 1d",
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+    dataField: "mc_rank_change_3d",
+    text: "RC 3d",
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+    dataField: "mc_rank_change_5d",
+    text: "RC 5d",
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+    dataField: "mc_rank_change_7d",
+    text: "RC 7d",
+    sort: true,
+    formatter: renderSignal
+  },
+  {
+<<<<<<< HEAD
     dataField: "mc_rank_9d",
     text: "Rank 9d",
+=======
+    dataField: "mc_rank_change_14d",
+    text: "RC 14d",
+>>>>>>> 883077ffb6f57a9f471057ba005c30a8b4acffdc
     sort: true,
     formatter: renderSignal
   },
   {
+<<<<<<< HEAD
     dataField: "mc_rank_11d",
     text: "Rank 11d",
+=======
+    dataField: "mc_rank_change_1mo",
+    text: "RC 1mo",
+>>>>>>> 883077ffb6f57a9f471057ba005c30a8b4acffdc
     sort: true,
     formatter: renderSignal
   },
   {
+<<<<<<< HEAD
     dataField: "mc_rank_13d",
     text: "Rank 13d",
+=======
+    dataField: "mc_rank_change_2mo",
+    text: "RC 2mo",
+>>>>>>> 883077ffb6f57a9f471057ba005c30a8b4acffdc
     sort: true,
     formatter: renderSignal
   },
   {
+<<<<<<< HEAD
     dataField: "mc_rank_21d",
     text: "Rank 21d",
+=======
+    dataField: "mc_rank_change_3mo",
+    text: "RC 3mo",
+>>>>>>> 883077ffb6f57a9f471057ba005c30a8b4acffdc
     sort: true,
     formatter: renderSignal
   }
