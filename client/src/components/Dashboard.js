@@ -91,26 +91,26 @@ const columns = [
     formatter: renderSignal
   },
   {
-    dataField: "mc_rank_change_14d",
-    text: "RC 14d",
+    dataField: "mc_rank_change_9d",
+    text: "RC 9d",
     sort: true,
     formatter: renderSignal
   },
   {
-    dataField: "mc_rank_change_1mo",
-    text: "RC 1mo",
+    dataField: "mc_rank_change_11d",
+    text: "RC 11d",
     sort: true,
     formatter: renderSignal
   },
   {
-    dataField: "mc_rank_change_2mo",
-    text: "RC 2mo",
+    dataField: "mc_rank_change_13d",
+    text: "RC 13d",
     sort: true,
     formatter: renderSignal
   },
   {
-    dataField: "mc_rank_change_3mo",
-    text: "RC 3mo",
+    dataField: "mc_rank_change_21d",
+    text: "RC 21d",
     sort: true,
     formatter: renderSignal
   },
@@ -139,26 +139,26 @@ const columns = [
     formatter: renderSignal
   },
   {
-    dataField: "mc_rank_14d",
-    text: "Rank 14d",
+    dataField: "mc_rank_9d",
+    text: "Rank 9d",
     sort: true,
     formatter: renderSignal
   },
   {
-    dataField: "mc_rank_1mo",
-    text: "Rank 1mo",
+    dataField: "mc_rank_11d",
+    text: "Rank 11d",
     sort: true,
     formatter: renderSignal
   },
   {
-    dataField: "mc_rank_2mo",
-    text: "Rank 2mo",
+    dataField: "mc_rank_13d",
+    text: "Rank 13d",
     sort: true,
     formatter: renderSignal
   },
   {
-    dataField: "mc_rank_3mo",
-    text: "Rank 3mo",
+    dataField: "mc_rank_21d",
+    text: "Rank 21d",
     sort: true,
     formatter: renderSignal
   }
@@ -244,46 +244,46 @@ function Dashboard() {
       const mc_rank_change_7d = nthCompare(
         sortedData,
         7,
-        14,
+        9,
         "marketcap_rank",
         ""
       );
-      const mc_rank_change_14d = nthCompare(
+      const mc_rank_change_9d = nthCompare(
         sortedData,
-        14,
-        30,
+        9,
+        11,
         "marketcap_rank",
         ""
       );
-      const mc_rank_change_1mo = nthCompare(
+      const mc_rank_change_11d = nthCompare(
         sortedData,
-        30,
-        60,
+        11,
+        13,
         "marketcap_rank",
         ""
       );
-      const mc_rank_change_2mo = nthCompare(
+      const mc_rank_change_13d = nthCompare(
         sortedData,
-        60,
-        90,
+        13,
+        21,
         "marketcap_rank",
         ""
       );
-      const mc_rank_change_3mo = nthCompare(
+      const mc_rank_change_21d = nthCompare(
         sortedData,
-        90,
-        90,
+        21,
+        21,
         "marketcap_rank",
         ""
       );
       const mc_rank_1d = getNth(sortedData, 1, 3, "marketcap_rank", "");
       const mc_rank_3d = getNth(sortedData, 3, 5, "marketcap_rank", "");
       const mc_rank_5d = getNth(sortedData, 5, 7, "marketcap_rank", "");
-      const mc_rank_7d = getNth(sortedData, 7, 14, "marketcap_rank", "");
-      const mc_rank_14d = getNth(sortedData, 14, 30, "marketcap_rank", "");
-      const mc_rank_1mo = getNth(sortedData, 30, 60, "marketcap_rank", "");
-      const mc_rank_2mo = getNth(sortedData, 60, 90, "marketcap_rank", "");
-      const mc_rank_3mo = getNth(sortedData, 90, 90, "marketcap_rank", "");
+      const mc_rank_7d = getNth(sortedData, 7, 9, "marketcap_rank", "");
+      const mc_rank_9d = getNth(sortedData, 9, 11, "marketcap_rank", "");
+      const mc_rank_11d = getNth(sortedData, 11, 13, "marketcap_rank", "");
+      const mc_rank_13d = getNth(sortedData, 13, 21, "marketcap_rank", "");
+      const mc_rank_21d = getNth(sortedData, 21, 21, "marketcap_rank", "");
 
       return {
         id,
@@ -296,18 +296,18 @@ function Dashboard() {
         mc_rank_change_3d,
         mc_rank_change_5d,
         mc_rank_change_7d,
-        mc_rank_change_14d,
-        mc_rank_change_1mo,
-        mc_rank_change_2mo,
-        mc_rank_change_3mo,
+        mc_rank_change_9d,
+        mc_rank_change_11d,
+        mc_rank_change_13d,
+        mc_rank_change_21d,
         mc_rank_1d,
         mc_rank_3d,
         mc_rank_5d,
         mc_rank_7d,
-        mc_rank_14d,
-        mc_rank_1mo,
-        mc_rank_2mo,
-        mc_rank_3mo
+        mc_rank_9d,
+        mc_rank_11d,
+        mc_rank_13d,
+        mc_rank_21d
       };
     });
   }
