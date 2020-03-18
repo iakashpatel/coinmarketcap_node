@@ -4,6 +4,7 @@ import Col from "react-bootstrap/Col";
 import Jumbotron from "react-bootstrap/Jumbotron";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
+import Spinner from "react-bootstrap/Spinner";
 import { useHistory } from "react-router-dom";
 import BootstrapTable from "react-bootstrap-table-next";
 import ToolkitProvider, {
@@ -388,16 +389,17 @@ function Dashboard() {
                     <SearchBar {...props.searchProps} />
                     <ClearSearchButton {...props.searchProps} />
                     <span>
+                      {/* <Spinner animation="border" /> */}
                       <Button
-                        variant="info"
+                        variant="success"
                         className="refresh"
                         onClick={refreshCoinsData}
                         disabled={isLoading}
                       >
-                        {isLoading ? "Refreshing…" : "Refresh"}
+                        {isLoading ? "Fetching..." : "Refresh data"}
                       </Button>
                       <Alert variant="light" className="datetime-refresh">
-                        Last Updated: <b>{lastUpdated}</b>
+                        Updated: <b>{lastUpdated}</b>
                       </Alert>
                     </span>
                     <hr />
