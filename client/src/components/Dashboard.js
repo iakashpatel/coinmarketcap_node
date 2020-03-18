@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Jumbotron from "react-bootstrap/Jumbotron";
+import Button from "react-bootstrap/Button";
+import Alert from "react-bootstrap/Alert";
 import { useHistory } from "react-router-dom";
 import BootstrapTable from "react-bootstrap-table-next";
 import ToolkitProvider, {
@@ -174,6 +176,8 @@ const defaultSorted = [
 function Dashboard() {
   let history = useHistory();
   const [tickers, setTickers] = useState([]);
+  const [isLoading, setLoading] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState(new Date().toString());
 
   function getRankWiseSortedData(coinsData = []) {
     const tempData = coinsData.sort(function(a, b) {
@@ -314,12 +318,30 @@ function Dashboard() {
 
   async function fetchCoins() {
     try {
+      setLoading(false);
       const coins = await axios.get("/coins");
       const { data } = coins;
       const { coins: coinsData } = data;
       const tempData = getRankWiseSortedData(coinsData);
       setTickers(tempData);
+      setLastUpdated(new Date().toString());
     } catch (error) {
+      history.replace("/login");
+      console.log("error-checkuser", error);
+    }
+  }
+
+  async function refreshCoinsData() {
+    try {
+      setLoading(true);
+      const coins = await axios.get("/coins/refresh");
+      const { data } = coins;
+      const { success = false } = data;
+      if (success) {
+        setTimeout(fetchCoins, 3000);
+      }
+    } catch (error) {
+      setLoading(false);
       history.replace("/login");
       console.log("error-checkuser", error);
     }
@@ -330,8 +352,10 @@ function Dashboard() {
     const socket = socketIOClient(process.env.REACT_APP_BACKEND_URL);
     socket.on("FromAPI", data => {
       console.log("socket updated data!!");
-      const tempData = getRankWiseSortedData(data);
+      const { coins: coinsData } = data;
+      const tempData = getRankWiseSortedData(coinsData);
       setTickers(tempData);
+      setLastUpdated(new Date().toString());
     });
     // eslint-disable-next-line
   }, []);
@@ -363,6 +387,19 @@ function Dashboard() {
                   <div>
                     <SearchBar {...props.searchProps} />
                     <ClearSearchButton {...props.searchProps} />
+                    <span>
+                      <Button
+                        variant="info"
+                        className="refresh"
+                        onClick={refreshCoinsData}
+                        disabled={isLoading}
+                      >
+                        {isLoading ? "Refreshing…" : "Refresh"}
+                      </Button>
+                      <Alert variant="light" className="datetime-refresh">
+                        Last Updated: <b>{lastUpdated}</b>
+                      </Alert>
+                    </span>
                     <hr />
                     <ToggleList {...props.columnToggleProps} />
                     <hr />
@@ -371,7 +408,8 @@ function Dashboard() {
                       // striped
                       bordered
                       condensed
-                      {...props.baseProps} />
+                      {...props.baseProps}
+                    />
                   </div>
                 )}
               </ToolkitProvider>

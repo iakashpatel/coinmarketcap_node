@@ -1,5 +1,5 @@
 const apiKey = process.env.COINMARKETCAP_APIKEY || "";
-
+const _ = require("lodash");
 const axios = require("axios");
 const Tickers = require("../models/tickers");
 
@@ -167,8 +167,26 @@ const pullDataAndStore = async (
   }
 };
 
+const getData = async () => {
+  try {
+      const coins = await Tickers.find().sort({
+      updated_timestamp: -1
+    });
+    const history_coins = _.chain(
+      _.orderBy(coins, ["marketcap_rank", "updated_timestamp"], ["asc", "desc"])
+    )
+      .groupBy("ticker")
+      .map((value, key) => ({ ticker: key, data: value }))
+      .value();
+    return ({ coins: history_coins });
+  } catch (error) {
+    return ({coins:[]});
+  }
+}
+
 module.exports = {
   generateDates,
   pullDataAndStore,
-  getTodaysDate
+  getTodaysDate,
+  getData
 };

@@ -27,13 +27,22 @@ code {
 } */
 
 .low {
-  color: #DC3545;
+  color: #dc3545;
 }
 
 .high {
-  color: #28A745;
+  color: #28a745;
 }
 
-.search-label{
-  width: 95%;
+.search-label {
+  width: 35%;
+}
+
+.refresh {
+  margin-left: 30px;
+}
+
+.datetime-refresh {
+  width: 25%;
+  display: inline;
 }
