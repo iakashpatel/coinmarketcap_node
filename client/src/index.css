@@ -46,3 +46,9 @@ code {
   width: 25%;
   display: inline;
 }
+
+.chart{
+  height: 900px;
+  margin: 50px auto;
+  margin-top: 25px;
+}

@@ -17,6 +17,8 @@ function Navigation(props) {
         <Nav>
           {!authenticated && <Nav.Link href="/signup">Register</Nav.Link>}
           {!authenticated && <Nav.Link href="/login">Login</Nav.Link>}
+          {authenticated && <Nav.Link href="/dashboard">Dashboard</Nav.Link>}
+          {authenticated && <Nav.Link href="/charts">Charts</Nav.Link>}
           {authenticated && <Nav.Link href="/profile">My Profile</Nav.Link>}
           {authenticated && <Nav.Link onClick={logout}>Logout</Nav.Link>}
         </Nav>

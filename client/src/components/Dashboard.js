@@ -60,7 +60,7 @@ const columns = [
     dataField: "price_usd",
     text: "Price",
     sort: true,
-    formatter: cell => formatMoney(cell)
+    formatter: cell => formatMoney(cell,2)
   },
   {
     dataField: "volume",
