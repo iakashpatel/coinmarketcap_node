@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Dropdown from "react-bootstrap/Dropdown";
 import { BumpChart } from "d3plus-react";
 import { useHistory } from "react-router-dom";
 import socketIOClient from "socket.io-client";
@@ -11,6 +12,7 @@ const _ = require("lodash");
 function ChartPage() {
   let history = useHistory();
   const [tickers, setTickers] = useState([]);
+  const [limit, setLimit] = useState(10);
 
   function getRankWiseSortedData(coinsData = []) {
     const tempData = coinsData.sort(function(a, b) {
@@ -38,8 +40,8 @@ function ChartPage() {
     return tempData;
   }
 
-  function getChartData() {
-    const cData = tickers.map(item => {
+  function getChartData(tickersData) {
+    const cData = tickersData.map(item => {
       const { data } = item;
       const sortedData = _.sortBy(data, [
         function(o) {
@@ -105,7 +107,8 @@ function ChartPage() {
     // eslint-disable-next-line
   }, []);
 
-  const chartData = getChartData();
+  const limitData = tickers.slice(0, limit);
+  const chartData = getChartData(limitData);
   const filterData = chartData.filter(x => !isNaN(x.rank));
 
   const config = {
@@ -120,9 +123,45 @@ function ChartPage() {
     <div>
       <Row>
         <Col xs={12} md={12}>
+          <span className="custom-dropdown">
+            <span>Select Size:</span>
+            <Dropdown>
+              <Dropdown.Toggle variant="dark" id="dropdown-limit">
+                {limit}
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={() => setLimit(10)}>10</Dropdown.Item>
+                <Dropdown.Item onClick={() => setLimit(25)}>25</Dropdown.Item>
+                <Dropdown.Item onClick={() => setLimit(30)}>30</Dropdown.Item>
+                <Dropdown.Item onClick={() => setLimit(50)}>50</Dropdown.Item>
+                <Dropdown.Item onClick={() => setLimit(tickers.length)}>
+                  {tickers.length}
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </span>
           <div className="chart">
             <BumpChart config={config} />
           </div>
+          <span className="custom-dropdown">
+            <span>Select Size:</span>
+            <Dropdown>
+              <Dropdown.Toggle variant="dark" id="dropdown-limit">
+                {limit}
+              </Dropdown.Toggle>
+
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={() => setLimit(10)}>10</Dropdown.Item>
+                <Dropdown.Item onClick={() => setLimit(25)}>25</Dropdown.Item>
+                <Dropdown.Item onClick={() => setLimit(30)}>30</Dropdown.Item>
+                <Dropdown.Item onClick={() => setLimit(50)}>50</Dropdown.Item>
+                <Dropdown.Item onClick={() => setLimit(tickers.length)}>
+                  {tickers.length}
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </span>
         </Col>
       </Row>
     </div>

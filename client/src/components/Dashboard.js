@@ -4,7 +4,7 @@ import Col from "react-bootstrap/Col";
 import Jumbotron from "react-bootstrap/Jumbotron";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
-import Spinner from "react-bootstrap/Spinner";
+// import Spinner from "react-bootstrap/Spinner";
 import { useHistory } from "react-router-dom";
 import BootstrapTable from "react-bootstrap-table-next";
 import ToolkitProvider, {
@@ -12,6 +12,10 @@ import ToolkitProvider, {
   Search
 } from "react-bootstrap-table2-toolkit";
 import socketIOClient from "socket.io-client";
+import paginationFactory, {
+  PaginationProvider,
+  SizePerPageDropdownStandalone
+} from "react-bootstrap-table2-paginator";
 import { nthCompare, getNth, formatMoney } from "../utils/dashboardUtil";
 const axios = require("axios");
 const _ = require("lodash");
@@ -61,7 +65,7 @@ const columns = [
     dataField: "price_usd",
     text: "Price",
     sort: true,
-    formatter: cell => formatMoney(cell,2)
+    formatter: cell => formatMoney(cell, 2)
   },
   {
     dataField: "volume",
@@ -375,46 +379,68 @@ function Dashboard() {
 
           <Row>
             <Col xs={12} md={12}>
-              <ToolkitProvider
-                bootstrap4
-                keyField="id"
-                data={data}
-                columns={columns}
-                columnToggle
-                defaultSorted={defaultSorted}
-                search
+              <PaginationProvider
+                pagination={paginationFactory({
+                  custom: true,
+                  totalSize: data.length
+                })}
               >
-                {props => (
+                {({ paginationProps, paginationTableProps }) => (
                   <div>
-                    <SearchBar {...props.searchProps} />
-                    <ClearSearchButton {...props.searchProps} />
-                    <span>
-                      {/* <Spinner animation="border" /> */}
-                      <Button
-                        variant="success"
-                        className="refresh"
-                        onClick={refreshCoinsData}
-                        disabled={isLoading}
-                      >
-                        {isLoading ? "Fetching..." : "Refresh data"}
-                      </Button>
-                      <Alert variant="light" className="datetime-refresh">
-                        Updated: <b>{lastUpdated}</b>
-                      </Alert>
-                    </span>
-                    <hr />
-                    <ToggleList {...props.columnToggleProps} />
-                    <hr />
-                    <BootstrapTable
-                      hover
-                      // striped
-                      bordered
-                      condensed
-                      {...props.baseProps}
-                    />
+                    <ToolkitProvider
+                      bootstrap4
+                      keyField="id"
+                      data={data}
+                      columns={columns}
+                      columnToggle
+                      defaultSorted={defaultSorted}
+                      search
+                    >
+                      {props => (
+                        <div>
+                          
+                          <SearchBar {...props.searchProps} />
+                          <ClearSearchButton {...props.searchProps} />
+                          <span>
+                            {/* <Spinner animation="border" /> */}
+                            <Button
+                              variant="success"
+                              className="refresh"
+                              onClick={refreshCoinsData}
+                              disabled={isLoading}
+                            >
+                              {isLoading ? "Fetching..." : "Refresh data"}
+                            </Button>
+                            <Alert variant="light" className="datetime-refresh">
+                              Updated: <b>{lastUpdated}</b>
+                            </Alert>
+                          </span>
+                          <span style={{ paddingRight: 30 }}>
+                            <span style={{ paddingRight: 20 }}>
+                              Select Size:
+                            </span>
+                            <SizePerPageDropdownStandalone
+                              {...paginationProps}
+                            />
+                          </span>
+                          <hr />
+                          <ToggleList {...props.columnToggleProps} />
+                          <hr />
+                          <BootstrapTable
+                            hover
+                            // striped
+                            bordered
+                            condensed
+                            pagination={paginationFactory({ custom: true })}
+                            {...props.baseProps}
+                            {...paginationTableProps}
+                          />
+                        </div>
+                      )}
+                    </ToolkitProvider>
                   </div>
                 )}
-              </ToolkitProvider>
+              </PaginationProvider>
             </Col>
           </Row>
         </Col>

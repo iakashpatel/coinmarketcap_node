@@ -52,3 +52,14 @@ code {
   margin: 50px auto;
   margin-top: 25px;
 }
+
+.custom-dropdown{
+  margin: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.custom-dropdown span{
+  margin-right: 30px;
+}
